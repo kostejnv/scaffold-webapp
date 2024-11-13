@@ -1,0 +1,31 @@
+name: CI - ruff and pytest
+
+on: [push]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    name: Continuous Integration
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v4
+      - name: Set up Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Configure Poetry
+        run: |
+          poetry config virtualenvs.create false
+      - name: Install dependencies with Poetry
+        run: |
+          poetry install --no-interaction --no-root --only main,test
+      - name: Run Ruff
+        run: |
+          find . -type f -name "*.py" | xargs poetry run ruff --no-cache
+      - name: Run pytest
+        run: |
+          poetry run pytest -vv

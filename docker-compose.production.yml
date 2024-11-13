@@ -1,0 +1,34 @@
+version: '3.9'
+
+x-app: &app
+  build: .
+  env_file:
+    - .env
+
+services:
+    redis:
+        image: redis:7.2.3-alpine
+        container_name: redis
+        env_file: .env
+        command: >
+            sh -c "redis-server &
+            sleep 10 &&
+            redis-cli CONFIG SET requirepass $$REDIS_PASSWORD &&
+            wait"
+
+    web:
+        <<: *app
+        container_name: web
+        command: uvicorn --host 0.0.0.0 --port 8000 --proxy-headers app:app --loglevel=info
+        ports:
+            - "8000:8000"
+        depends_on:
+            - redis
+
+    worker:
+        <<: *app
+        container_name: worker
+        command: celery --app app.worker.celery_app worker --loglevel=info
+        depends_on:
+            - web
+            - redis

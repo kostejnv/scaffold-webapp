@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# Unit test
+.cache
+**/.pytest_cache/
+
+# cache
+*_cache
+
+# Environments
+.env
+.direnv
+.venv/
+.envrc
+.env*
+.venv/
+
+# Editor settings
+.idea/
+.vscode/
+*DS_Store
+
+# readme pdf
+**/README.pdf
+
+# Debug files
+*debug*
+
+# Database
+db-data

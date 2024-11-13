@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Test page</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="{{ url_for('static', path='/css/styles.css') }}" rel="stylesheet">
+    <meta name="theme-color" content="#7952b3">
+</head>
+<body>
+<main>
+    <section class="py-5 text-center container">
+        <div class="row pt-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Test page</h1>
+            </div>
+        </div>
+    </section>
+    <section class="container">
+        <form class="g-3">
+            <div class="mb-3">
+                <label for="token-input" class="form-label">Token</label>
+                <input type="text" class="form-control" id="token-input">
+            </div>
+        </form>
+        <div class="g-3">
+            <div class="text-center">
+                    <button type="button" id="test-btn" class="btn btn-primary border">
+                        Test
+                        <span class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+                    </button>
+            </div>
+            <p id="info"></p>
+        </div>
+    </section>
+</main>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+<script src="{{ url_for('static', path='/js/button.js') }}"></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const testButton = document.getElementById('test-btn');
+        const tokenInput = document.getElementById('token-input');
+        const infoMessage = document.getElementById('info');
+        let intervalId;
+
+        async function checkTaskStatus(taskId, btn) {
+            try {
+                const response = await fetch(`/api/task/result/${taskId}`);
+                const data = await response.json();
+                switch (data.status) {
+                    case 'SUCCESS':
+                        clearInterval(intervalId);
+                        const result = data.result;
+                        infoMessage.innerHTML = result;
+                        setNormalButtonMode(btn);
+                        break;
+                    case 'FAILURE':
+                        clearInterval(intervalId);
+                        infoMessage.innerHTML = 'Task failed';
+                        setErrorButtonMode(btn);
+                        break;
+                    case 'PENDING':
+                        break;
+                    default:
+                        clearInterval(intervalId);
+                        infoMessage.innerHTML = `Unknown status: ${data.status}`;
+                        setErrorButtonMode(btn);
+                        break;
+                }
+            } catch (error) {
+                clearInterval(intervalId);
+                infoMessage.innerHTML = 'Error: ' + error;
+                setErrorButtonMode(btn);
+            }
+        }
+
+        async function runTestTask(btn) {
+            setLoadingButtonMode(btn);
+
+            const token = tokenInput.value;
+
+            try {
+                const response = await fetch('/api/test-task', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        authorize_token: token
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const taskId = data.task_id;
+                    intervalId = setInterval(checkTaskStatus, 1000, taskId, btn);
+                } else {
+                    const data = await response.json();
+                    infoMessage.innerHTML = data.message;
+                    setErrorButtonMode(btn);
+                }
+            } catch (error) {
+                infoMessage.innerHTML = 'Error: ' + error;
+                setErrorButtonMode(btn);
+            }
+        }
+
+        testButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+            await runTestTask(testButton);
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# git files
+.git
+.env
+.env-test
+.direnv
+
+# docker files
+.github/*
+
+# docs
+docs/*
+*DS_Store
+
+# python files
+**/.pytest_cache/
+
+# Debug files
+*debug*
+
+# IDE files
+.idea/
+.vscode/
+*DS_Store
+
+# database
+db-data

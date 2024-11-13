@@ -1,0 +1,148 @@
+[tool.poetry]
+name = "New Project" #TODO: Change this
+version = "0.0.1"
+readme = "README.md"
+
+description = "New Project" #TODO: Change this
+
+authors = [
+  "Vít Koštejn <v.kostejn.vk@gmail.com>"
+]
+
+repository = "https://github.com/outfindo/..." #TODO: Change this
+homepage = "https://project.com" #TODO: Change this
+
+
+[tool.poetry.dependencies]
+# Compatible Python versions
+python = "^3.12"
+fastapi = "^0.109.1"
+uvicorn = "^0.27.0.post1"
+jinja2 = "^3.1.3"
+pydantic-settings = "^2.1.0"
+httpx = "^0.26.0"
+sqlalchemy = {extras = ["asyncpg"], version = "^2.0.25"}
+asyncpg = "^0.29.0"
+redis = "^5.0.1"
+celery = {extras = ["redis"], version = "^5.3.6"}
+flower = "^2.0.1"
+miniopy-async = "^1.19"
+aiohttp = "^3.9"
+aiocache = "^0.12"
+pydantic="^2.8"
+
+numpy = "^1.26.4"
+pandas = "^2.2.1"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.0.0"
+ruff = "^0.2.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.2.0"
+pytest = "^8.0.0"
+ipykernel = "^6.29.5"
+
+[[tool.poetry.source]]
+name = "pypi"
+priority = "primary"
+
+[[tool.poetry.source]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "bump2version"
+]
+
+[tool.ruff]
+line-length = 120
+indent-width = 4
+
+exclude = [
+    ".git",
+    ".github",
+    "docs",
+    "__pycache__",
+    "outputs",
+    "build",
+]
+
+target-version = "py312"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+
+[tool.ruff.lint]
+select = [
+    "E", # Errors
+    "F", # Pyflakes
+    "W", # Warnings
+    "I", # Import
+    "YTT", # Pyflakes 2020
+    "S", # Bandit
+    "C90", # Complex structure
+    "FBT", # Boolean trap
+    "B", # Bugbear
+    "A", # Flake8 Builtins
+    "COM", # Commas
+    "C4", # Comprehensions
+    "DTZ", # DatetimeZone
+    "T10", # Debugger
+    "EM", # Error messages
+    "G", # Logging format
+    "PIE", # Pyflake PIE
+    "INP", # Implicit namespace
+    "PYI", # Flake PYI
+    "PT", # Pytest style
+    "ARG", # arg order
+    "TID", # trailing id
+    "SIM", # similar
+    "PT", # python type
+    "Q", # quotes
+    "RET", # Fix return
+    "SLF", # Private member access
+    "T20", # Print
+    "PL", # Pylint
+    "RUF", # Ruff
+    "FURB", # REFURB
+    "LOG", # Logging
+]
+
+ignore = ["E501", "EM102", "B019", "FBT001", "FBT002", "E731"]
+
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.lint.mccabe]
+max-complexity = 11
+
+[tool.ruff.lint.pylint]
+max-args = 8
+
+[tool.ruff.lint.per-file-ignores]
+
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.Query", "fastapi.params.Query"]
+
+
+[tool.mypy]
+plugins = [
+  "pydantic.mypy"
+]

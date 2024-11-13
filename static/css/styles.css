@@ -1,0 +1,17 @@
+html, body {
+    height: 80%;
+    margin: 0;
+    padding: 0;
+}
+.hidden {
+    display: none;
+}
+
+.document-preview {
+    position: relative;
+    display: inline-block;
+}
+
+.rounded-image {
+    border-radius: 15px; /* Adjust the radius as desired */
+}
