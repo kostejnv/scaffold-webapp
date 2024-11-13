@@ -118,6 +118,8 @@ To use this project as a template for another project, follow these steps:
     git push -u origin main
     ```
 
+10. **Update `push-registry.yml` and add secrets into github**
+
 By following these steps, you can effectively use the existing project as a template for creating a new project.
 
 ## Project Structure

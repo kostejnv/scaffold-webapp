@@ -6,7 +6,8 @@ from functools import wraps
 from typing import Any, Callable, Dict, TypeVar
 
 import httpx
-from beacon.client.exceptions import ClientHTTPStatusException
+
+from app.client.exceptions import ClientHTTPStatusException
 
 T = TypeVar("T", bound=Callable[..., Any])
 

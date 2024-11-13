@@ -27,7 +27,7 @@ jobs:
         name: Login to DockerHub
         uses: docker/login-action@v3
         with:
-          registry: registry.outfindo.dev
+          registry: #TODO: add registry
           username: ${{ secrets.REGISTRY_NAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       -
@@ -36,4 +36,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: registry.outfindo.dev/production/beacon:latest
+          tags: #TODO: add tag
